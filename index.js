@@ -1,7 +1,7 @@
 "use strict";
 /// <reference path="./env" />
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.core = exports.server = exports.plugin = exports.manager = exports.event = exports.command = exports.type = exports.session = exports.unzip = exports.transfer = exports.task = exports.sync = exports.simplify = exports.root = exports.response = exports.reload = exports.record = exports.future = exports.format = exports.file = exports.fetch = exports.dev = exports.data = exports.chain = exports.array = void 0;
+exports.core = exports.server = exports.plugin = exports.manager = exports.event = exports.command = exports.type = exports.session = exports.unzip = exports.transfer = exports.task = exports.sync = exports.simplify = exports.root = exports.reload = exports.format = exports.file = exports.fetch = exports.dev = exports.data = exports.chain = exports.array = void 0;
 const base = require("@grakkit/core");
 var core_1 = require("@grakkit/core");
 Object.defineProperty(exports, "array", { enumerable: true, get: function () { return core_1.array; } });
@@ -11,10 +11,7 @@ Object.defineProperty(exports, "dev", { enumerable: true, get: function () { ret
 Object.defineProperty(exports, "fetch", { enumerable: true, get: function () { return core_1.fetch; } });
 Object.defineProperty(exports, "file", { enumerable: true, get: function () { return core_1.file; } });
 Object.defineProperty(exports, "format", { enumerable: true, get: function () { return core_1.format; } });
-Object.defineProperty(exports, "future", { enumerable: true, get: function () { return core_1.future; } });
-Object.defineProperty(exports, "record", { enumerable: true, get: function () { return core_1.record; } });
 Object.defineProperty(exports, "reload", { enumerable: true, get: function () { return core_1.reload; } });
-Object.defineProperty(exports, "response", { enumerable: true, get: function () { return core_1.response; } });
 Object.defineProperty(exports, "root", { enumerable: true, get: function () { return core_1.root; } });
 Object.defineProperty(exports, "simplify", { enumerable: true, get: function () { return core_1.simplify; } });
 Object.defineProperty(exports, "sync", { enumerable: true, get: function () { return core_1.sync; } });
@@ -22,13 +19,9 @@ Object.defineProperty(exports, "task", { enumerable: true, get: function () { re
 Object.defineProperty(exports, "transfer", { enumerable: true, get: function () { return core_1.transfer; } });
 Object.defineProperty(exports, "unzip", { enumerable: true, get: function () { return core_1.unzip; } });
 /** A session container for this module. */
-exports.session = {
-    data: base.session.data,
-    event: new Map(),
-    poly: base.session.poly,
-    task: base.session.task,
-    type: base.session.type
-};
+exports.session = Object.assign({}, base.session, {
+    event: new Map()
+});
 /** Imports the specified type from java. */
 function type(name) {
     if (exports.session.type.has(name)) {
@@ -113,7 +106,7 @@ exports.plugin = exports.manager.getPlugin('grakkit');
 /** The server instance. */
 exports.server = Bukkit.getServer();
 /** @deprecated */
-exports.core = Object.assign(base.core, {
+exports.core = Object.assign({}, base.core, {
     command,
     event,
     manager: exports.manager,
@@ -137,8 +130,7 @@ Core.hook(() => {
 });
 const instance = new Listener();
 Object.assign(globalThis, {
-    // @ts-expect-error
-    core: exports,
+    core: exports.core,
     manager: exports.manager,
     plugin: exports.plugin,
     server: exports.server

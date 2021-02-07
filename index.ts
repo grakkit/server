@@ -181,7 +181,6 @@ Core.hook(() => {
 const instance = new Listener();
 
 Object.assign(globalThis, {
-   // @ts-expect-error
    core,
    manager,
    plugin,
