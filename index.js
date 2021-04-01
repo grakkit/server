@@ -75,17 +75,40 @@ function event(name, ...listeners) {
         list = new Set();
         exports.session.event.set(name, list);
     }
-    if (list.size === 0) {
+    const targets = new Set();
+    for (const listener of listeners) {
+        if (typeof listener === 'function') {
+            targets.has('HIGHEST') || targets.add('HIGHEST');
+        }
+        else {
+            targets.has(listener.priority) || targets.add(listener.priority);
+        }
+    }
+    for (const listener of list) {
+        if (typeof listener === 'function') {
+            targets.has('HIGHEST') && targets.delete('HIGHEST');
+        }
+        else {
+            targets.has(listener.priority) && targets.delete(listener.priority);
+        }
+    }
+    for (const target of targets) {
         const emitter = type(name);
         exports.manager.registerEvent(
         // @ts-expect-error
-        emitter.class, instance, EventPriority.HIGHEST, 
+        emitter.class, instance, EventPriority.valueOf(target), 
         // @ts-expect-error
         (x, signal) => {
             if (signal instanceof emitter) {
                 try {
-                    for (const listener of list)
-                        listener(signal);
+                    for (const listener of list) {
+                        if (typeof listener === 'function') {
+                            target === 'HIGHEST' && listener(signal);
+                        }
+                        else {
+                            target === listener.priority && listener.script(signal);
+                        }
+                    }
                 }
                 catch (error) {
                     console.error(`An error occured while attempting to handle the "${name}" event!`);

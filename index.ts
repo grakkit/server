@@ -26,8 +26,11 @@ export {
    unzip
 } from '@grakkit/core';
 
+/** A valid event priority. */
+export type priority = 'HIGH' | 'HIGHEST' | 'LOW' | 'LOWEST' | 'MONITOR' | 'NORMAL';
+
 /** A set of listeners attached to an event. */
-export type cascade = Set<(event: any) => void>;
+export type cascade = Set<((event: any) => void) | { script: (event: any) => void; priority: priority }>;
 
 /** The main class of this plugin. */
 export interface main extends obpPlugin {
@@ -110,7 +113,12 @@ export function command (options: {
 }
 
 /** Attaches one or more listeners to a server event. */
-export function event<X extends keyof events> (name: X, ...listeners: ((event: InstanceType<events[X]>) => void)[]) {
+export function event<X extends keyof events> (
+   name: X,
+   ...listeners: (
+      | ((event: InstanceType<events[X]>) => void)
+      | { script: (event: InstanceType<events[X]>) => void; priority: priority })[]
+) {
    let list: cascade;
    if (session.event.has(name)) {
       list = session.event.get(name);
@@ -118,18 +126,39 @@ export function event<X extends keyof events> (name: X, ...listeners: ((event: I
       list = new Set();
       session.event.set(name, list);
    }
-   if (list.size === 0) {
+   const targets: Set<priority> = new Set();
+   for (const listener of listeners) {
+      if (typeof listener === 'function') {
+         targets.has('HIGHEST') || targets.add('HIGHEST');
+      } else {
+         targets.has(listener.priority) || targets.add(listener.priority);
+      }
+   }
+   for (const listener of list) {
+      if (typeof listener === 'function') {
+         targets.has('HIGHEST') && targets.delete('HIGHEST');
+      } else {
+         targets.has(listener.priority) && targets.delete(listener.priority);
+      }
+   }
+   for (const target of targets) {
       const emitter = type(name);
       manager.registerEvent(
          // @ts-expect-error
          emitter.class,
          instance,
-         EventPriority.HIGHEST,
+         EventPriority.valueOf(target),
          // @ts-expect-error
          (x: any, signal: any) => {
             if (signal instanceof emitter) {
                try {
-                  for (const listener of list) listener(signal);
+                  for (const listener of list) {
+                     if (typeof listener === 'function') {
+                        target === 'HIGHEST' && listener(signal);
+                     } else {
+                        target === listener.priority && listener.script(signal);
+                     }
+                  }
                } catch (error) {
                   console.error(`An error occured while attempting to handle the "${name}" event!`);
                   console.error(error.stack || error.message || error);

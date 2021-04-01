@@ -4,8 +4,13 @@ import { events } from './events';
 import { obcCommandSender, obpPlugin } from '@grakkit/server-classes';
 import * as base from '@grakkit/core';
 export { array, chain, data, dev, fetch, file, format, future, record, reload, response, root, simplify, sync, task, transfer, unzip } from '@grakkit/core';
+/** A valid event priority. */
+export declare type priority = 'HIGH' | 'HIGHEST' | 'LOW' | 'LOWEST' | 'MONITOR' | 'NORMAL';
 /** A set of listeners attached to an event. */
-export declare type cascade = Set<(event: any) => void>;
+export declare type cascade = Set<((event: any) => void) | {
+    script: (event: any) => void;
+    priority: priority;
+}>;
 /** The main class of this plugin. */
 export interface main extends obpPlugin {
     register(namespace: string, name: string, aliases: string[], permission: string, message: string, executor: (sender: obcCommandSender, name: string, args: string[]) => any, tabCompleter: (sender: obcCommandSender, name: string, args: string[]) => string[]): void;
@@ -31,7 +36,10 @@ export declare function command(options: {
     tabComplete?: (sender: obcCommandSender, ...args: string[]) => string[];
 }): void;
 /** Attaches one or more listeners to a server event. */
-export declare function event<X extends keyof events>(name: X, ...listeners: ((event: InstanceType<events[X]>) => void)[]): void;
+export declare function event<X extends keyof events>(name: X, ...listeners: (((event: InstanceType<events[X]>) => void) | {
+    script: (event: InstanceType<events[X]>) => void;
+    priority: priority;
+})[]): void;
 /** The plugin manager instance. */
 export declare const manager: import("@grakkit/server-classes").obpPluginManager;
 /** This plugin's instance. */
