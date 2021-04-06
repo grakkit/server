@@ -1,7 +1,7 @@
 "use strict";
 /// <reference path="./env" />
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.core = exports.server = exports.plugin = exports.manager = exports.event = exports.command = exports.type = exports.session = exports.unzip = exports.transfer = exports.task = exports.sync = exports.simplify = exports.root = exports.reload = exports.format = exports.file = exports.fetch = exports.dev = exports.data = exports.chain = exports.array = void 0;
+exports.core = exports.server = exports.plugin = exports.manager = exports.event = exports.command = exports.type = exports.session = exports.unzip = exports.transfer = exports.task = exports.sync = exports.simplify = exports.root = exports.reload = exports.load = exports.format = exports.file = exports.fetch = exports.dev = exports.data = exports.chain = exports.array = void 0;
 const base = require("@grakkit/core");
 var core_1 = require("@grakkit/core");
 Object.defineProperty(exports, "array", { enumerable: true, get: function () { return core_1.array; } });
@@ -11,6 +11,7 @@ Object.defineProperty(exports, "dev", { enumerable: true, get: function () { ret
 Object.defineProperty(exports, "fetch", { enumerable: true, get: function () { return core_1.fetch; } });
 Object.defineProperty(exports, "file", { enumerable: true, get: function () { return core_1.file; } });
 Object.defineProperty(exports, "format", { enumerable: true, get: function () { return core_1.format; } });
+Object.defineProperty(exports, "load", { enumerable: true, get: function () { return core_1.load; } });
 Object.defineProperty(exports, "reload", { enumerable: true, get: function () { return core_1.reload; } });
 Object.defineProperty(exports, "root", { enumerable: true, get: function () { return core_1.root; } });
 Object.defineProperty(exports, "simplify", { enumerable: true, get: function () { return core_1.simplify; } });

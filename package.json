@@ -3,7 +3,7 @@
       "typescript": "4.1.3"
    },
    "dependencies": {
-      "@grakkit/core": "3.2.6",
+      "@grakkit/core": "3.2.7",
       "@grakkit/server-classes": "1.0.1"
    },
    "main": "index.js",
@@ -15,5 +15,5 @@
       "build": "tsc --watch"
    },
    "types": "index.d.ts",
-   "version": "1.4.1"
+   "version": "1.4.2"
 }

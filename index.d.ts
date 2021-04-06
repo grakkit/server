@@ -3,7 +3,7 @@ import { types } from './types';
 import { events } from './events';
 import { obcCommandSender, obpPlugin } from '@grakkit/server-classes';
 import * as base from '@grakkit/core';
-export { array, chain, data, dev, fetch, file, format, future, record, reload, response, root, simplify, sync, task, transfer, unzip } from '@grakkit/core';
+export { array, chain, data, dev, fetch, file, format, future, load, record, reload, response, root, simplify, sync, task, transfer, unzip } from '@grakkit/core';
 /** A valid event priority. */
 export declare type priority = 'HIGH' | 'HIGHEST' | 'LOW' | 'LOWEST' | 'MONITOR' | 'NORMAL';
 /** A set of listeners attached to an event. */
@@ -76,6 +76,7 @@ export declare const core: {
     simplify: typeof base.simplify;
     session: {
         data: Map<string, any>;
+        load: Map<string, any>;
         poly: {
             index: number;
             list: Map<number, base.future>;
